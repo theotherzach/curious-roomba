@@ -47,7 +47,7 @@ describe("cell", function () {
       expect(sdr.predicted).not.toHaveBeenCalled();
     });
 
-    it("turns itself on if the conditions are right", function () {
+    it("turns itself on if the harbingers are members of the set of active cells", function () {
       cell.tick();
       expect(cell.state()).toBe("on");
     });
@@ -61,11 +61,41 @@ describe("cell", function () {
       expect(cell.state()).toBe("off");
     });
 
+    it("has a consistency of 0 prior to a successful prediction", function () {
+      expect(cell.consistency()).toBe(0);
+    });
+
+    it("increments a consistency score for each successful match", function () {
+      cell.tick();
+      expect(cell.consistency()).toBe(1);
+    });
+
+    it("noise turns on a cell that has 0 consistency", function () {
+      cell.noise();
+      expect(cell.state()).toBe("on");
+    });
+
+    it("when noise turns on a cell, it is a new prediction", function () {
+      cell.tick().tick();
+      spyOn(sdr, "predicted");
+      cell.noise().noise().tick().tick();
+      expect(sdr.predicted).toHaveBeenCalled();
+    });
+
+    it("noise decrements positive consistency", function () {
+      cell.tick().tick();
+      expect(cell.consistency()).toBe(1);
+      cell.noise();
+      expect(cell.state()).toBe("off");
+      expect(cell.consistency()).toBe(0);
+    });
+
     xit("makes a prediction based on a sub-sample of the previously active cells", function () {
     });
 
     xit("successful predictions result in another cell transitioning to Expected on the next step.", function () {
     });
   });
+
 
 });
