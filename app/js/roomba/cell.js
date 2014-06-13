@@ -13,7 +13,7 @@ function Cell(sdr) {
       if (_harbingers.length > 0) {
 
         if (_isNewPrediction) {
-          sdr.predicted();
+          sdr.predicted(self);
           _isNewPrediction = false;
         }
 

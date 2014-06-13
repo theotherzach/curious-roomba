@@ -19,7 +19,7 @@ describe("cell", function () {
   });
 
   it("checks the previous step's SDR when on", function () {
-    spyOn(sdr, "activeCells").andReturn(_(_.range(200)).sample(40));
+    spyOn(sdr, "activeCells").andReturn(_(_.range(2000)).sample(40));
     cell.turnOn();
     expect(sdr.activeCells).toHaveBeenCalled();
   });
@@ -37,7 +37,7 @@ describe("cell", function () {
     it("predicts whether it is about to turn on again.", function () {
       spyOn(sdr, "predicted");
       cell.tick();
-      expect(sdr.predicted).toHaveBeenCalled();
+      expect(sdr.predicted).toHaveBeenCalledWith(cell);
     });
 
     it("gets bored with the same prediction", function () {
