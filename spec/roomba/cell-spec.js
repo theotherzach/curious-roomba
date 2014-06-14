@@ -2,9 +2,11 @@ describe("cell", function () {
   var cell, sdr = null;
 
   beforeEach(function () {
+    var _activeCells = [];
     sdr = {
-      activeCells: function () { return []; },
-      predicted: function () {}
+      activeCells: function () { return _activeCells; },
+      predicted: function () {},
+      setActiveCells: function(cells) { _activeCells = cells; }
     }
 
     cell = new Cell(sdr);
@@ -20,9 +22,26 @@ describe("cell", function () {
 
   it("checks the previous step's SDR when on", function () {
     spyOn(sdr, "activeCells").andReturn(_(_.range(2000)).sample(40));
-    cell.turnOn();
+    cell.tick();
     expect(sdr.activeCells).toHaveBeenCalled();
   });
+
+  it("uses a sample from the previous tick to reject a match", function () {
+    sdr.setActiveCells(_(_.range(2000)).sample(40));
+    cell.tick();
+
+    sdr.setActiveCells(_(_.range(2000)).sample(40));
+    expect(cell.isPatternMatching()).not.toBe(true);
+  });
+
+  it("uses a sample from the previous tick to accept a match", function () {
+    sdr.setActiveCells(_(_.range(2000)).sample(40));
+    cell.noise().tick().tick();
+    // sdr.setActiveCells(_(_.range(2000)).sample(40));
+
+    expect(cell.state()).toBe("on");
+  });
+
 
   describe("predictions", function () {
     beforeEach(function () {

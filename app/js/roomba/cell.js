@@ -6,9 +6,12 @@ function Cell(sdr) {
   var _harbingers = [];
   var _isNewPrediction = false;
   var _consistency = 0;
+  var _intervalId = null;
+  var _activeCells = sdr.activeCells();
 
   function tick() {
     if (_state === "on") {
+
       turnOff();
     } else if (isPatternMatching()) {
 
@@ -21,9 +24,11 @@ function Cell(sdr) {
 
       turnOn();
     } else if (isRandomFire()) {
+
       noise();
     }
 
+    _activeCells = sdr.activeCells();
     return self;
   }
 
@@ -55,7 +60,7 @@ function Cell(sdr) {
     }
 
     if (isWhiteNoise()) {
-      _harbingers = _(sdr.activeCells()).sample(10);
+      _harbingers = _(_activeCells).sample(10);
     }
 
     return self;
@@ -90,11 +95,24 @@ function Cell(sdr) {
     return _consistency;
   }
 
-  self.noise = noise;
+  function startBeat() {
+    _intervalId = setInterval(tick, 1000);
+    return self;
+  }
+
+  function stopBeat() {
+    clearInterval(_intervalId);
+    return self;
+  }
+
   self.consistency = consistency;
+  self.isPatternMatching = isPatternMatching;
+  self.noise = noise;
+  self.startBeat = startBeat;
+  self.state = state;
+  self.stopBeat = stopBeat;
   self.tick = tick;
   self.turnOff = turnOff;
   self.turnOn = turnOn;
-  self.state = state;
   return self;
 }
