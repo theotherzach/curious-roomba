@@ -1,4 +1,12 @@
-.hello {
-  background-color: #efefef;
-  border: 1px solid #dedede;
+rect  {
+  fill: #FFF;
+  stroke: none;
+}
+
+.life {
+  fill: #ACE;
+}
+
+rect:hover {
+  stroke: #BDF;
 }
