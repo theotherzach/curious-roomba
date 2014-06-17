@@ -3,8 +3,7 @@ describe("A Cell", function () {
   beforeEach(function () {
     neighborhood = {
       activeLastStep: jasmine.createSpy("activeLastStep").andReturn([1,2,3]),
-      watch: jasmine.createSpy("watch").andReturn(neighborhood),
-      register: jasmine.createStub("register"),
+      isCellActive: jasmine.createSpy("isCellActive"),
       alertToOn: jasmine.createStub("alertToOn"),
       getId: jasmine.createStub("getId"),
     };
@@ -14,7 +13,6 @@ describe("A Cell", function () {
   it("takes notice of other cells when activated", function () {
     cell.turnOn();
     expect(neighborhood.activeLastStep).toHaveBeenCalled();
-    expect(neighborhood.watch).toHaveBeenCalled();
   });
 
   it("predicts when it will be activated again by keeping an eye on some of the neighbors that were active last time", function(){

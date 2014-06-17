@@ -6,35 +6,29 @@ function Cell(neighborhood) {
   self.predictive = false;
   self.state = "off";
   self.id = makeGuid();
-
-  neighborhood.register(self);
-
+  self.cellsToWatch = [];
 
   self.turnOn = function () {
     self.state = "on";
 
-    neighborhood.alertToOn(self);
-
     if (self.predictive) {
+      console.log("Nailed it!");
     } else {
-      var activeCells = neighborhood.activeLastStep();
-      neighborhood.watch(activeCells, function (cellIds) {
-        self.poll(cellIds);
-      });
+      self.cellsToWatch = neighborhood.activeLastStep();
     }
 
     return self;
   };
 
-  self.poll = function (cellIds) {
-    var sampledCells = cellIds.map(function(e, i) {
+  self.poll = function () {
+    var sampledCells = self.cellsToWatch.map(function(e, i) {
       return {
         id: e,
         active: neighborhood.isCellActive(e)
       };
     });
 
-    predictive = predict(sampledCells);
+    self.predictive = predict(sampledCells);
     return self;
   };
 
