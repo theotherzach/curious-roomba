@@ -40,11 +40,11 @@ function createNewGeneration() {
       index = parseXY(x,y);
       top = y - 1;
       bottom = y + 1;
-      n = states[parseXY(left,top)] + states[parseXY(x,top)] + states[parseXY(right,top)]
-        + states[parseXY(left,y)] +                      states[parseXY(right,y)]
-        + states[parseXY(left,bottom)] + states[parseXY(x,bottom)] + states[parseXY(right,bottom)];
+      n = states[parseXY(left,top)] + states[parseXY(x,top)] + states[parseXY(right,top)] +
+         states[parseXY(left,y)] +                      states[parseXY(right,y)] +
+         states[parseXY(left,bottom)] + states[parseXY(x,bottom)] + states[parseXY(right,bottom)];
 
-      nextStates[index] = states[index] ? n == 2 || n == 3 : n == 3;
+      nextStates[index] = states[index] ? n ===  2 || n ===  3 : n ===  3;
     }
   }
   return nextStates;
