@@ -1,5 +1,7 @@
 describe("A Cell", function () {
   var cell, neighborhood;
+  var Cell = importCell();
+
   beforeEach(function () {
     neighborhood = {
       activeLastStep: jasmine.createSpy("activeLastStep").andReturn([1,2,3]),

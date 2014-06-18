@@ -1,7 +1,7 @@
 describe("Neighborhood", function () {
   var neighborhood;
   beforeEach(function () {
-    neighborhood = new Neighborhood(100, Cell);
+    neighborhood = new Neighborhood(100);
   });
 
   it("cells", function () {

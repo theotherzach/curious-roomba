@@ -1,8 +1,7 @@
 function Neighborhood(size, CellConstructor) {
   "use strict";
   var self = this;
-
-  var Cell = CellConstructor || Cell;
+  var Cell = CellConstructor || importCell();
 
   self.cells = _(size).times(function(i) {
     return new Cell(self);
@@ -30,7 +29,7 @@ function Neighborhood(size, CellConstructor) {
     });
 
     return self;
-  }
+  };
 
   self.pollAll = function() {
     self.cells.forEach(function(cell) {
@@ -38,7 +37,7 @@ function Neighborhood(size, CellConstructor) {
     });
 
     return self;
-  }
+  };
 
   return self;
 }
