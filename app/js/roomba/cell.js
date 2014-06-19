@@ -4,16 +4,14 @@ function importCell() {
 
   function Cell (neighborhood) {
     var self = this;
+    if (!(self instanceof Cell)) { throw new Error("Cell must be invoked with `new`"); }
+
     self.neighborhood = neighborhood;
     self.watchList = [];
     self.predictive = false;
     self.state = "off";
     self.id = guid.make();
     self.cellsToWatch = [];
-  }
-
-  function predict(sampledCells) {
-    return Math.random() < 0.2;
   }
 
   var proto = {
@@ -32,10 +30,7 @@ function importCell() {
     poll: function () {
       var self = this;
       var sampledCells = self.cellsToWatch.map(function(e, i) {
-        return {
-          id: e,
-          active: self.neighborhood.isCellActive(e)
-        };
+        return self.neighborhood.isCellActive(e);
       });
       self.predictive = predict(sampledCells);
       return self;
@@ -59,12 +54,28 @@ function importCell() {
         self.turnOn();
       } else if(self.state === "on") {
         self.turnPrevious();
+      } else if(Math.random < 0.8) {
+        self.turnOn();
       } else {
         self.turnOff();
       }
       return self;
     },
   };
+
+  function predict(sampledCells) {
+    var max = sampledCells.length;
+    if (max === 0) { return false; }
+
+    var matches = sampledCells.reduce(function(memo, e) {
+      return memo + e;
+    });
+    var score = matches / max;
+
+    if (!isFinite(score)) { throw "Bad score"; }
+    return score >= 0.8;
+  }
+
 
   _(Cell.prototype).extend(proto);
 

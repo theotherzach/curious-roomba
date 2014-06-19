@@ -4,10 +4,8 @@ describe("A Cell", function () {
 
   beforeEach(function () {
     neighborhood = {
-      activeLastStep: jasmine.createSpy("activeLastStep").andReturn([1,2,3]),
+      activeLastStep: jasmine.createSpy("activeLastStep").andReturn([0,1,2,3,4]),
       isCellActive: jasmine.createSpy("isCellActive"),
-      alertToOn: jasmine.createStub("alertToOn"),
-      getId: jasmine.createStub("getId"),
     };
     cell = new Cell(neighborhood);
   });
@@ -18,8 +16,13 @@ describe("A Cell", function () {
   });
 
   it("predicts when it will be activated again by keeping an eye on some of the neighbors that were active last time", function(){
+    neighborhood.isCellActive = function(id) {
+      return true;
+    }
     cell.turnOn().turnOff();
-    cell.tick(true).tick(false).tick(false)
+    cell.poll();
+
+    expect(cell.predictive).toBe(true);
   });
 
   it("updates reliability markers even if it's not activated");
