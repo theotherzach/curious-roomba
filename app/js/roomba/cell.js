@@ -4,7 +4,7 @@ function importCell() {
 
   function Cell (neighborhood) {
     var self = this;
-    if (!(self instanceof Cell)) { throw new Error("Cell must be invoked with `new`"); }
+    if (!(self instanceof Cell)) { throw "Cell must be invoked with `new`"; }
 
     self.neighborhood = neighborhood;
     self.watchList = [];

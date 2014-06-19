@@ -1,6 +1,7 @@
 describe("Neighborhood", function () {
   var neighborhood;
   beforeEach(function () {
+    var Neighborhood = importNeighborhood();
     neighborhood = new Neighborhood(100);
   });
 

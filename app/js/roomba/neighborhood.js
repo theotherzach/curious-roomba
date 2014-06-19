@@ -1,43 +1,55 @@
-function Neighborhood(size, CellConstructor) {
+function importNeighborhood() {
   "use strict";
-  var self = this;
-  var Cell = CellConstructor || importCell();
+  var Cell = importCell();
 
-  self.cells = _(size).times(function(i) {
-    return new Cell(self);
-  });
+  function Neighborhood(size) {
+    var self = this;
+    if (!(self instanceof Neighborhood)) { throw "Neighborhood must be invoked with `new`"; }
 
-  self.activeLastStep = function() {
-    return self.cells.filter(function(e, i) {
-      return e.state === "previous";
-    }).map(function(e) {
-      return e.id;
+    self.cells = _(size).times(function(i) {
+      return new Cell(self);
     });
+  }
+
+
+  var proto = {
+
+    activeLastStep: function() {
+      var self = this;
+      return self.cells.filter(function(e, i) {
+        return e.state === "previous";
+      }).map(function(e) {
+        return e.id;
+      });
+    },
+
+    isCellActive: function(cellId) {
+      var self = this;
+      var cell = _(self.cells).find(function(e) {
+        return e.id === cellId;
+      });
+      return cell.state === "on";
+    },
+
+    tickAll: function() {
+      var self = this;
+      self.cells.forEach(function(cell) {
+        cell.tick(Math.random() < 0.2);
+      });
+      return self;
+    },
+
+    pollAll: function() {
+      var self = this;
+      self.cells.forEach(function(cell) {
+        cell.poll();
+      });
+      return self;
+    },
   };
 
-  self.isCellActive = function(cellId) {
-    var cell = _(self.cells).find(function(e) {
-      return e.id === cellId;
-    });
 
-    return cell.state === "on";
-  };
+  _(Neighborhood.prototype).extend(proto);
 
-  self.tickAll = function() {
-    self.cells.forEach(function(cell) {
-      cell.tick(Math.random() < 0.2);
-    });
-
-    return self;
-  };
-
-  self.pollAll = function() {
-    self.cells.forEach(function(cell) {
-      cell.poll();
-    });
-
-    return self;
-  };
-
-  return self;
+  return Neighborhood;
 }
