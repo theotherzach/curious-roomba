@@ -54,7 +54,7 @@ function importCell() {
         self.turnOn();
       } else if(self.state === "on") {
         self.turnPrevious();
-      } else if(Math.random < 0.8) {
+      } else if(Math.random < 0.1) {
         self.turnOn();
       } else {
         self.turnOff();

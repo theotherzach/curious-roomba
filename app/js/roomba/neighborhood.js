@@ -31,10 +31,18 @@ function importNeighborhood() {
       return cell.state === "on";
     },
 
-    tickAll: function() {
+    isCellPredictive: function(cellId) {
+      var self = this;
+      var cell = _(self.cells).find(function(e) {
+        return e.id === cellId;
+      });
+      return cell.predictive;
+    },
+
+    tickAll: function(cellIds) {
       var self = this;
       self.cells.forEach(function(cell) {
-        cell.tick(Math.random() < 0.2);
+        cell.tick(_(cellIds).contains(cell.id));
       });
       return self;
     },
