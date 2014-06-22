@@ -35,11 +35,13 @@ describe("Neighborhood", function () {
 
     it("recalls basic sequence", function () {
 
-      neighborhood.tickAll([cell1.id]);
+      neighborhood.tickAll([cell1.id])
       neighborhood.pollAll();
       neighborhood.tickAll([cell2.id]);
       neighborhood.pollAll();
       neighborhood.tickAll([cell3.id]);
+      neighborhood.pollAll();
+      neighborhood.tickAll([cell4.id]);
       neighborhood.pollAll();
 
 
