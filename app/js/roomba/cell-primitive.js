@@ -6,6 +6,7 @@ function importCellPrimitive() {
 
     self.ACTIVE_CELL_RATIO = 0.02;
     self._feedForward = 0;
+    self._inhibitorValue = 0;
     self._neighboring = [];
     self._connections = [];
   }
@@ -14,18 +15,21 @@ function importCellPrimitive() {
     feedForward: function (value) {
       var self = this;
 
-      if(value > self.inhibitorValue()) {
-        self._feedForward = value;
-      } else {
-        self._feedForward = 0;
-      }
+      self._feedForward = value;
+      self.inhibit();
+
       return self;
     },
 
     active: function () {
       var self = this;
 
-      return self._feedForward;
+      if (self._feedForward >= self.inhibitorValue()) {
+        return self._feedForward;
+      } else {
+        return 0;
+      }
+
     },
 
     activeNeighbors: function (value) {
@@ -52,18 +56,33 @@ function importCellPrimitive() {
 
     inhibitorValue: function () {
       var self = this;
-      if (_(self._neighboring).isEmpty()) { return 0; }
+
+      return self._inhibitorValue;
+    },
+
+    inhibit: function () {
+      var self = this;
+      if (_(self._neighboring).isEmpty()) {
+        self._inhibitorValue = 0;
+        return self;
+      }
 
       var cellQty = Math.round(self._neighboring.length * self.ACTIVE_CELL_RATIO) || 1;
 
       var maxNeighbors = _(self._neighboring).sortBy(function(cell){
         return -cell.active();
       }).filter(function(cell, index) {
-        return index < cellQty;
+        return index <= cellQty;
       });
 
+      var weakestActiveNeighbor = _(maxNeighbors).last(2)[0];
 
-      return _(maxNeighbors).last().active();
+      if (self._inhibitorValue !== weakestActiveNeighbor._feedForward) {
+        self._inhibitorValue = weakestActiveNeighbor._feedForward;
+        _(maxNeighbors).invoke("inhibit");
+      }
+
+      return self;
     },
 
   };
