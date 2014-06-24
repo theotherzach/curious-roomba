@@ -6,10 +6,7 @@
     <link rel="stylesheet" type="text/css" href="<%= css %>" media="all" />
   </head>
   <body>
-    <ul>
-      <li><a href='gol.html'>Game Of Life</a></li>
-      <li><a href='sunny-ocean.html'>Sunny Ocean</a></li>
-    </ul>
+    <sunnyocean></sunnyocean>
 
     <script type="text/javascript" src="<%= js %>"></script>
   </body>

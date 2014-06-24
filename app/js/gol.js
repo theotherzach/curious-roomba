@@ -5,8 +5,8 @@ function runGol() {
   var xCellQty = Math.round(viewportWidth / cellSide);
   var yCellQty = Math.round(viewportHeight / cellSide);
 
-  if (isNaN(xCellQty)) { throw "invalid xCellQty"; }
-  if (isNaN(yCellQty)) { throw "invalid yCellQty"; }
+  if (!isFinite(xCellQty)) { throw "invalid xCellQty"; }
+  if (!isFinite(yCellQty)) { throw "invalid yCellQty"; }
 
   var xScale = d3.scale.linear().domain([0, xCellQty]).rangeRound([0, xCellQty * cellSide]);
   var yScale = d3.scale.linear().domain([0, yCellQty]).rangeRound([0, yCellQty * cellSide]);
