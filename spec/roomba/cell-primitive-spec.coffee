@@ -53,9 +53,15 @@ describe "A Cell", ->
       cells[0].feedForward(50)
       expect(cell.activeNeighbors()).toContain(cells[0])
 
-    Then ->
-      cell.ACTIVE_CELL_RATIO = 0.5
-      cells[0].feedForward(50)
-      cell.feedForward(100)
-      expect(cell.connections()).toContain(cells[0])
-      cell.ACTIVE_CELL_RATIO = 0.02
+    # context "making predictions", ->
+    #   Given ->
+    #     cells.forEach (e) -> e.ACTIVE_CELL_RATIO = 0.5
+
+    #   afterEach ->
+    #     cells.forEach (e) -> e.ACTIVE_CELL_RATIO = 0.02
+
+    #   When ->
+    #     _(3).times ->
+    #       cells.forEach (cell, index) -> cell.feedForward(index * 10)
+    #   Then ->
+    #     expect(cells[3].connections()).toContain(cells[2])
