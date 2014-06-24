@@ -4,6 +4,7 @@ function importCellPrimitive() {
   function Cell() {
     var self = this;
 
+    self.ACTIVE_CELL_RATIO = 0.02;
     self._feedForward = 0;
     self._neighboring = [];
     self._connections = [];
@@ -44,19 +45,25 @@ function importCellPrimitive() {
     },
 
     connections: function () {
+      var self = this;
+
+      return self._connections;
     },
 
     inhibitorValue: function () {
       var self = this;
-      var maxNeighbor = _(self._neighboring).max(function(cell){
-        return cell.active();
+      if (_(self._neighboring).isEmpty()) { return 0; }
+
+      var cellQty = Math.round(self._neighboring.length * self.ACTIVE_CELL_RATIO) || 1;
+
+      var maxNeighbors = _(self._neighboring).sortBy(function(cell){
+        return -cell.active();
+      }).filter(function(cell, index) {
+        return index < cellQty;
       });
 
-      if (_(maxNeighbor).isObject()) {
-        return maxNeighbor.active();
-      } else {
-        return 0;
-      }
+
+      return _(maxNeighbors).last().active();
     },
 
   };
