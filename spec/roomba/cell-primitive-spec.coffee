@@ -51,8 +51,11 @@ describe "A Cell", ->
 
     Then ->
       cells[0].feedForward(50)
-      expect(cell.activeNeighbors(50)).toContain(cells[0])
-    # Then ->
-    #   cells[0].feedForward(50)
-    #   cell.feedForward(100)
-    #   expect(cell.connections()).toContain(cells[0])
+      expect(cell.activeNeighbors()).toContain(cells[0])
+
+    Then ->
+      cell.ACTIVE_CELL_RATIO = 0.5
+      cells[0].feedForward(50)
+      cell.feedForward(100)
+      expect(cell.connections()).toContain(cells[0])
+      cell.ACTIVE_CELL_RATIO = 0.02

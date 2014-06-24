@@ -8,12 +8,16 @@ function importCellPrimitive() {
     self._feedForward = 0;
     self._inhibitorValue = 0;
     self._neighboring = [];
-    self._connections = [];
+    self._connectedTo = [];
   }
 
   var proto = {
     feedForward: function (value) {
       var self = this;
+
+      if (value) {
+        self._connectedTo = self.activeNeighbors();
+      }
 
       self._feedForward = value;
       self.inhibit();
@@ -32,11 +36,11 @@ function importCellPrimitive() {
 
     },
 
-    activeNeighbors: function (value) {
+    activeNeighbors: function () {
       var self = this;
 
       return self._neighboring.filter(function(cell) {
-        return cell.active() >= value;
+        return cell.active();
       });
     },
 
@@ -51,7 +55,7 @@ function importCellPrimitive() {
     connections: function () {
       var self = this;
 
-      return self._connections;
+      return self._connectedTo;
     },
 
     inhibitorValue: function () {
@@ -70,7 +74,7 @@ function importCellPrimitive() {
       var cellQty = Math.round(self._neighboring.length * self.ACTIVE_CELL_RATIO) || 1;
 
       var maxNeighbors = _(self._neighboring).sortBy(function(cell){
-        return -cell.active();
+        return -cell._feedForward
       }).filter(function(cell, index) {
         return index <= cellQty;
       });
