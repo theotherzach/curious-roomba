@@ -1,10 +1,12 @@
 function importCell() {
   "use strict";
-  var guid = importGuid();
+  var guid = null;
 
   function Cell (neighborhood) {
     var self = this;
     if (!(self instanceof Cell)) { throw "Cell must be invoked with `new`"; }
+
+    guid = importGuid();
 
     self.neighborhood = neighborhood;
     self.watchList = [];

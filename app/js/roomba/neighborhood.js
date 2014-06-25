@@ -1,10 +1,12 @@
 function importNeighborhood() {
   "use strict";
-  var Cell = importCell();
+  var Cell = null;
 
   function Neighborhood(size) {
     var self = this;
     if (!(self instanceof Neighborhood)) { throw "Neighborhood must be invoked with `new`"; }
+
+    Cell = importCell();
 
     self.cells = _(size).times(function(i) {
       return new Cell(self);
