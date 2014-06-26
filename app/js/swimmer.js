@@ -4,7 +4,7 @@ function importSwimmer() {
   var Cell = null;
   var Neighborhood = null;
 
-  function Swimmer() {
+  function Swimmer(environment) {
     var self = this;
     if (!(self instanceof Swimmer)) { throw "Swimmer must be invoked with `new`"; }
     Cell = importCell();
@@ -13,6 +13,8 @@ function importSwimmer() {
     self.eye = new Neighborhood(100);
     self.brain = new Neighborhood(100);
     self.motor = new Neighborhood(100);
+    self.environment = environment;
+
   }
 
   var proto = {
@@ -20,26 +22,40 @@ function importSwimmer() {
       var self = this;
 
       var maxLumens = 1600;
-      var lightRatio = lumens / maxLumens;
       var eyeSize = self.eye.cells.length;
       var eyeSections = Math.round(eyeSize / 4)
-      if (!lightRatio) { throw "invalid lumen level" }
+      var cellIds = [];
+      var painCell = self.eye.cells[1];
+      var oneKCell = self.eye.cells[10];
 
-      var cellIds = _(4).times(function(i) {
-        var cellIndex = (i * eyeSections) + Math.round(eyeSections * lightRatio);
-        var cell = self.eye.cells[cellIndex];
+      if (lumens >= 1600) { cellIds.push(self.eye.cells[16].id); }
+      if (lumens >= 1500) { cellIds.push(self.eye.cells[15].id); }
+      if (lumens >= 1400) { cellIds.push(self.eye.cells[14].id); }
+      if (lumens >= 1300) { cellIds.push(self.eye.cells[13].id); }
+      if (lumens >= 1200) { cellIds.push(self.eye.cells[12].id); }
+      if (lumens >= 1100) { cellIds.push(self.eye.cells[11].id); }
 
-        if (!cell) { throw "invalid cell index" }
-
-        return cell;
-      }).map(function(cell) {
-        return cell.id;
-      });
+      if (lumens >= 1000) {
+        cellIds.push(painCell.id);
+        cellIds.push(oneKCell.id);
+      }
 
       self.eye.tickAll(cellIds);
       self.eye.pollAll();
-      return cellIds;
+      return self;
     },
+
+    tick: function() {
+      var self = this;
+
+      console.log(self.environment.lightLevel());
+      self.senseLight(self.environment.lightLevel());
+      self.environment.swim();
+
+
+      return self;
+    },
+
   };
 
   _(Swimmer.prototype).extend(proto);

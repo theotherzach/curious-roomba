@@ -10,12 +10,14 @@ function runSunnyOcean() {
     attr('width', viewportWidth).
     attr('height', viewportHeight);
 
+  var oceanY = viewportHeight * 0.33;
+  var oceanHeight = viewportHeight * 0.67;
 
   var ocean = viewport.append("rect").
     attr("class", "ocean").
     attr("width", viewportWidth).
-    attr("height", viewportHeight * 0.67).
-    attr("y", viewportHeight * 0.33).
+    attr("height", oceanHeight).
+    attr("y", oceanY).
     style("fill", "rgba(71, 171, 192, 1.0)");
 
   var sky = viewport.append("rect").
@@ -46,6 +48,7 @@ function runSunnyOcean() {
 
   var isCloudBlockingSun = true;
 
+
   function moveCloud() {
     if (isCloudBlockingSun) {
       cloud.transition().
@@ -63,5 +66,55 @@ function runSunnyOcean() {
   cloud.on("click", function(d, i) {
     moveCloud();
   })
+
+  var swimmerRadius = Math.round(baseRadius * 0.00625);
+  var swimmerX = viewportWidth - (swimmerRadius * 30);
+  var swimmerY = oceanY + swimmerRadius * 2
+
+  var swimmerSVG = viewport.append("ellipse").
+    attr("class", "swimmer").
+    attr("rx", swimmerRadius * 0.5).
+    attr("ry", swimmerRadius * 2).
+    attr("cx", swimmerX).
+    attr("cy", swimmerY).
+    style("fill", "rgba(8, 8, 8, 1.0)");
+
+  function moveSwimmer(swimmerSVG, x, y) {
+    swimmerSVG.transition().
+      duration(980).
+      attr("cx", x).
+      attr("cy", y);
+  }
+
+  function Environment() {
+    var self = this;
+    var x = swimmerX;
+    var y = swimmerY;
+
+    self.lightLevel = function() {
+      var baseLight;
+      if (isCloudBlockingSun) {
+        baseLight = 800;
+      } else {
+        baseLight = 1400;
+      }
+      var depthMod = 1 - (y - oceanY) / oceanHeight
+      return depthMod * baseLight;
+    };
+
+    self.swim = function() {
+      y += 10;
+      moveSwimmer(swimmerSVG, x, y);
+
+    }
+  }
+
+  var Swimmer = importSwimmer();
+  var environment = new Environment();
+  var swimmer = new Swimmer(environment);
+
+  setInterval(function() {
+    swimmer.tick();
+  }, 1000);
 
 }
