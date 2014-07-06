@@ -86,10 +86,20 @@ function runSunnyOcean() {
       attr("cy", y);
   }
 
-  function Environment() {
+  function Environment(swimmerX, swimmerY) {
     var self = this;
     var x = swimmerX;
     var y = swimmerY;
+    var degrees = 90;
+    var velocity = 10;
+
+    function angle(degrees) {
+      return degrees / (180/Math.PI);
+    }
+
+    function m(angle) {
+      return Math.tan(angle);
+    }
 
     self.lightLevel = function() {
       var baseLight;
@@ -103,14 +113,17 @@ function runSunnyOcean() {
     };
 
     self.swim = function() {
-      y += 10;
+      var yMod = Math.sin(angle(degrees)) * velocity;
+      var xMod = Math.cos(angle(degrees)) * velocity;
+      y += yMod;
+      x += xMod;
       moveSwimmer(swimmerSVG, x, y);
 
     }
   }
 
   var Swimmer = importSwimmer();
-  var environment = new Environment();
+  var environment = new Environment(swimmerX, swimmerY);
   var swimmer = new Swimmer(environment);
 
   setInterval(function() {
