@@ -17,7 +17,6 @@
 TODO:
   Add support for Object.prototype.watch -> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/watch
 */
-"use strict";
 if(!Object.observe){
   (function(extend, global){
     var isCallable = (function(toString){

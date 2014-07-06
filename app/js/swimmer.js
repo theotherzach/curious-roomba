@@ -15,9 +15,24 @@ function importSwimmer() {
     self.motor = new Neighborhood(100);
     self.environment = environment;
 
+    self.hardwire();
   }
 
   var proto = {
+    hardwire: function() {
+      var self = this;
+      var painCell = self.eye.cells[1];
+
+      Object.observe(painCell,function(events) {
+        var cell = events[0].object
+        if (cell.state !== "on") { return; }
+
+        self.environment.swim();
+      })
+
+
+    },
+
     senseLight: function(lumens) {
       var self = this;
 
@@ -46,9 +61,7 @@ function importSwimmer() {
     tick: function() {
       var self = this;
 
-      console.log(self.environment.lightLevel());
       self.senseLight(self.environment.lightLevel());
-      self.environment.swim();
 
 
       return self;
