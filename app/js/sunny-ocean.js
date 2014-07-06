@@ -93,12 +93,8 @@ function runSunnyOcean() {
     var degrees = 90;
     var velocity = 10;
 
-    function angle(degrees) {
+    function toRadians(degrees) {
       return degrees / (180/Math.PI);
-    }
-
-    function m(angle) {
-      return Math.tan(angle);
     }
 
     self.lightLevel = function() {
@@ -112,9 +108,18 @@ function runSunnyOcean() {
       return depthMod * baseLight;
     };
 
+    self.turn = function(direction, deg) {
+      if (direction === "left") {
+        degrees += deg
+      } else if (direction === "right") {
+        degrees -= deg
+      }
+      return self;
+    };
+
     self.swim = function() {
-      var yMod = Math.sin(angle(degrees)) * velocity;
-      var xMod = Math.cos(angle(degrees)) * velocity;
+      var yMod = Math.sin(toRadians(degrees)) * velocity;
+      var xMod = Math.cos(toRadians(degrees)) * velocity;
       y += yMod;
       x += xMod;
       moveSwimmer(swimmerSVG, x, y);
