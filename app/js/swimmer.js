@@ -22,8 +22,6 @@ function importSwimmer() {
       var self = this;
 
       var maxLumens = 1600;
-      var eyeSize = self.eye.cells.length;
-      var eyeSections = Math.round(eyeSize / 4)
       var cellIds = [];
       var painCell = self.eye.cells[1];
       var oneKCell = self.eye.cells[10];
