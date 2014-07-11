@@ -39,7 +39,6 @@ function importSwimmer() {
 
       Object.observe(self.fwdCell, function(events) {
         if (events[0].object.state === "on") {
-          self.environment.swim();
 
           if (self.leftCell.state === "on") {
             self.leftCell.turnOff();
@@ -50,6 +49,8 @@ function importSwimmer() {
           } else {
             self.rightCell.turnOn();
           }
+
+          self.environment.swim();
         }
       });
 
@@ -79,28 +80,43 @@ function importSwimmer() {
 
       var maxLumens = 1600;
       var cellIds = [];
-      var oneKCell = self.eye.cells[10];
+      var lumenLevels = [1000, 1100, 1200, 1300, 1400, 1500, 1600];
 
-      if (lumens >= 1600) { cellIds.push(self.eye.cells[16].id); }
-      if (lumens >= 1500) { cellIds.push(self.eye.cells[15].id); }
-      if (lumens >= 1400) { cellIds.push(self.eye.cells[14].id); }
-      if (lumens >= 1300) { cellIds.push(self.eye.cells[13].id); }
-      if (lumens >= 1200) { cellIds.push(self.eye.cells[12].id); }
-      if (lumens >= 1100) { cellIds.push(self.eye.cells[11].id); }
+      var allLightLevelCells = lumenLevels.map(function(e) {
+        return self.eye.cells[Math.round(e * 0.01)];
+      });
+
+      var previousIntensity = allLightLevelCells.filter(function(cell) {
+        return cell.state === "on";
+      }).length;
+
+      var intensityCellIds = allLightLevelCells.filter(function(cell, index) {
+        return lumens >= 1000 + ((index) * 100)
+      }).map(function(cell) {
+        return cell.id;
+      });
+
+      var currentIntensity = intensityCellIds.length;
+
+      if (currentIntensity > previousIntensity) {
+        // console.log("worst!")
+      } else if (currentIntensity < previousIntensity) {
+        // console.log("better!")
+      } else {
+        // console.log("equal")
+      }
 
       if (lumens >= 1000) {
         cellIds.push(self.painCell.id);
-        cellIds.push(oneKCell.id);
       }
 
-      self.eye.tickAll(cellIds);
+      self.eye.tickAll(cellIds.concat(intensityCellIds));
       self.eye.pollAll();
       return self;
     },
 
     tick: function() {
       var self = this;
-
       self.senseLight(self.environment.lightLevel());
 
       return self;

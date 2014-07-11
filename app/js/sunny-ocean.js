@@ -68,6 +68,8 @@ function runSunnyOcean() {
   })
 
   var swimmerRadius = Math.round(baseRadius * 0.00625);
+  var swimmerRX = swimmerRadius * 0.5;
+  var swimmerRY = swimmerRadius * 2;
   var swimmerX = viewportWidth - (swimmerRadius * 30);
   var swimmerY = oceanY + swimmerRadius * 2
 
@@ -79,7 +81,16 @@ function runSunnyOcean() {
     attr("cy", swimmerY).
     style("fill", "rgba(8, 8, 8, 1.0)");
 
-  function moveSwimmer(swimmerSVG, x, y) {
+  function rotateSwimmer(swimmerSVG,x,y, degrees) {
+    swimmerSVG.transition().
+      duration(0).
+      attr("transform",
+           "rotate(" + degrees + "," + x + "," + y + ")")
+  }
+
+  window.swimmer = swimmerSVG;
+
+  function moveSwimmer(swimmerSVG, x, y, degrees) {
     swimmerSVG.transition().
       duration(980).
       attr("cx", x).
@@ -110,8 +121,10 @@ function runSunnyOcean() {
 
     self.turn = function(direction, deg) {
       if (direction === "left") {
+        rotateSwimmer(swimmerSVG,x,y, deg);
         degrees += deg
       } else if (direction === "right") {
+        rotateSwimmer(swimmerSVG,x,y, deg * -1);
         degrees -= deg
       }
       return self;
